@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import restfullapisei.restful.entity.Lokasi;
 import restfullapisei.restful.entity.proyek_lokasi;
-import restfullapisei.restful.model.CreateLokasiRequest;
-import restfullapisei.restful.model.CreateProyekRequest;
-import restfullapisei.restful.model.UpdateLokasiRequest;
-import restfullapisei.restful.model.WebResponse;
+import restfullapisei.restful.model.*;
 import restfullapisei.restful.service.LokasiService;
 
 import java.util.List;
@@ -52,6 +49,18 @@ public class LokasiController {
     public WebResponse<String> create(@RequestBody CreateLokasiRequest request){
         lokasiService.create(request);
         return WebResponse.<String>builder().data("Data Berhasil Disimpan").build();
+    }
+
+    @DeleteMapping(
+            path="/lokasi",
+
+    produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<String> delete(@RequestBody DeleteLokasiRequest request)
+    {
+        lokasiService.delete(request);
+        return WebResponse.<String>builder().data("Data Berhasil DiHapus").build();
+
     }
 
 

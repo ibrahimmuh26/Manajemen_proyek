@@ -9,6 +9,7 @@ import restfullapisei.restful.entity.Lokasi;
 import restfullapisei.restful.entity.proyek_lokasi;
 import restfullapisei.restful.model.CreateLokasiRequest;
 import restfullapisei.restful.model.CreateProyekRequest;
+import restfullapisei.restful.model.DeleteLokasiRequest;
 import restfullapisei.restful.model.UpdateLokasiRequest;
 import restfullapisei.restful.repository.LokasiRepository;
 
@@ -58,6 +59,15 @@ public class LokasiService {
         lokasi.setProvinsi(request.getProvinsi());
         lokasi.setKota(request.getKota());
         lokasiRepository.save(lokasi);
+
+    }
+    public void delete(DeleteLokasiRequest request){
+        Set<ConstraintViolation<DeleteLokasiRequest>> constraintViolationS=  validator.validate(request);
+        if(constraintViolationS.size() != 0 ){
+            throw  new ConstraintViolationException(constraintViolationS);
+        }
+
+        lokasiRepository.deleteById(Integer.toString(request.getId()));
 
     }
 

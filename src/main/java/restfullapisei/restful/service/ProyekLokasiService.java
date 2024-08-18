@@ -10,6 +10,7 @@ import restfullapisei.restful.entity.Lokasi;
 import restfullapisei.restful.entity.Proyek;
 import restfullapisei.restful.entity.proyek_lokasi;
 import restfullapisei.restful.model.CreateProyekRequest;
+import restfullapisei.restful.model.DeleteProyekLokasiRequest;
 import restfullapisei.restful.model.UpdateProyekRequest;
 import restfullapisei.restful.repository.LokasiRepository;
 import restfullapisei.restful.repository.ProyekLokasiRepository;
@@ -46,7 +47,9 @@ public class ProyekLokasiService {
         }
         Optional<proyek_lokasi> proyekLokasi = proyekLokasiRepository.findById(Integer.toString(request.getId()));
         Optional<Proyek> proyek = proyekRepository.findById(Integer.toString(proyekLokasi.get().getProyek().getId()));
-        Optional<Lokasi> lokasi =  lokasiRepository.findById(Integer.toString(proyekLokasi.get().getProyek().getId()));
+        Optional<Lokasi> lokasi =  lokasiRepository.findById(Integer.toString(proyekLokasi.get().getLokasi().getId()));
+
+
         if (proyekLokasi.isPresent()) {
             Proyek proyek_entity =proyek.get();
 
@@ -66,18 +69,35 @@ public class ProyekLokasiService {
             lokasiRepository.save(lokasi_entity);
 
 
+
         } else {
             throw new EntityNotFoundException("Entity not found");
+        }
+
+
+
+
+
+
+
+
+
     }
 
+    public  void delete(DeleteProyekLokasiRequest request){
+        Set<ConstraintViolation< DeleteProyekLokasiRequest >> constraintViolationS=  validator.validate(request);
+        if(constraintViolationS.size() != 0 ){
+            throw  new ConstraintViolationException(constraintViolationS);
+        }
+        Optional<proyek_lokasi> proyekLokasi = proyekLokasiRepository.findById(Integer.toString(request.getId()));
+        Optional<Proyek> proyek = proyekRepository.findById(Integer.toString(proyekLokasi.get().getProyek().getId()));
+        Optional<Lokasi> lokasi =  lokasiRepository.findById(Integer.toString(proyekLokasi.get().getLokasi().getId()));
 
-
-
-
-
-
-
-
+        Proyek proyek_entity= proyek.get();
+        proyekRepository.delete(proyek_entity);
+        Lokasi lokasi_entity=lokasi.get();
+        lokasiRepository.delete(lokasi_entity);
+        proyekLokasiRepository.deleteById(Integer.toString(request.getId()));
     }
 
 
